@@ -1,0 +1,71 @@
+{
+  "entities": {
+    "UserProfile": {
+      "path": "users/{userId}",
+      "fields": {
+        "userId": { "type": "string", "description": "Unique auth UID" },
+        "targetLanguageId": { "type": "string", "description": "Target language ID (e.g. spanish, french)" },
+        "nativeLanguageId": { "type": "string", "description": "Native explanation dialect ID" },
+        "level": { "type": "string", "description": "CEFR level: A1, A2, B1, B2, C1" },
+        "dailyGoalMinutes": { "type": "number", "description": "Target practice minutes per day" },
+        "voice": { "type": "string", "description": "Preferred Gemini voice" },
+        "speechSpeed": { "type": "number", "description": "Audio playback speed factor" },
+        "updatedAt": { "type": "string", "description": "ISO timestamp of last update" }
+      }
+    },
+    "UserProgress": {
+      "path": "users/{userId}/data/progress",
+      "fields": {
+        "xp": { "type": "number", "description": "Total experience points" },
+        "streakDays": { "type": "number", "description": "Consecutive days practiced" },
+        "lastActiveDate": { "type": "string", "description": "YYYY-MM-DD last active date" },
+        "todayPracticeMinutes": { "type": "number", "description": "Minutes practiced today" },
+        "conversationsCompleted": { "type": "number", "description": "Total roleplay sessions completed" },
+        "weaknesses": { "type": "array", "description": "Identified grammar and vocabulary gaps" },
+        "recentActivities": { "type": "array", "description": "Recent learning activities" }
+      }
+    },
+    "TutorMemory": {
+      "path": "users/{userId}/data/tutorMemory",
+      "fields": {
+        "learnerName": { "type": "string", "description": "Learner display name or preferred alias" },
+        "knownStrengths": { "type": "array", "description": "Mastered topics and grammatical strengths" },
+        "targetWeaknesses": { "type": "array", "description": "Active grammatical weaknesses to coach" },
+        "topicsCovered": { "type": "array", "description": "Recent conversation themes and topics" },
+        "notes": { "type": "string", "description": "Pedagogical coach observations and notes" },
+        "updatedAt": { "type": "string", "description": "ISO timestamp of last update" }
+      }
+    },
+    "SavedWord": {
+      "path": "users/{userId}/vocabulary/{wordId}",
+      "fields": {
+        "id": { "type": "string", "description": "Unique word identifier" },
+        "word": { "type": "string", "description": "Word or short phrase in target language" },
+        "languageId": { "type": "string", "description": "Target language ID" },
+        "translation": { "type": "string", "description": "Translation in native language" },
+        "contextSentence": { "type": "string", "description": "Contextual usage sentence" },
+        "contextTranslation": { "type": "string", "description": "Translation of context sentence" },
+        "partOfSpeech": { "type": "string", "description": "Noun, verb, adjective, etc." },
+        "masteryLevel": { "type": "number", "description": "SRS mastery score 0-5" },
+        "intervalDays": { "type": "number", "description": "Current SM-2 interval in days" },
+        "easeFactor": { "type": "number", "description": "SM-2 ease factor" },
+        "reviewCount": { "type": "number", "description": "Number of times reviewed" },
+        "nextReviewDate": { "type": "string", "description": "ISO timestamp of next scheduled review" },
+        "createdAt": { "type": "string", "description": "ISO timestamp when word was saved" }
+      }
+    },
+    "SessionRecord": {
+      "path": "users/{userId}/sessions/{sessionId}",
+      "fields": {
+        "id": { "type": "string", "description": "Unique session ID" },
+        "scenarioId": { "type": "string", "description": "Scenario ID" },
+        "scenarioTitle": { "type": "string", "description": "Scenario display title" },
+        "languageId": { "type": "string", "description": "Language used" },
+        "durationSeconds": { "type": "number", "description": "Session length in seconds" },
+        "turnsCount": { "type": "number", "description": "Total conversational turns" },
+        "timestamp": { "type": "string", "description": "ISO timestamp" },
+        "overallScore": { "type": "number", "description": "Overall session score" }
+      }
+    }
+  }
+}

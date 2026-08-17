@@ -1,0 +1,11 @@
+{
+  "name": "LinguaFlow AI - Real-Time Language Practice Partner",
+  "description": "An interactive real-time conversational AI language learning companion powered by Gemini Live voice streaming, interactive roleplays, instant accent & grammar feedback, vocabulary builder, and pronunciation coaching.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
