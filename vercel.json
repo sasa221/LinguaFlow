@@ -1,11 +1,5 @@
-{
+﻿{
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "fluid": true,
-  "buildCommand": "npm run vercel-build",
-  "functions": {
-    "server.ts": {
-      "maxDuration": 300,
-      "includeFiles": "dist/**"
-    }
-  }
+  "buildCommand": "npm run vercel-build"
 }
