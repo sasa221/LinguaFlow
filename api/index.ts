@@ -25,40 +25,80 @@ async function generateGeminiWithRetry(
   },
   maxRetries = 2
 ): Promise<any> {
-  const candidateModels = [options.model || 'gemini-3.7-flash', 'gemini-flash-latest'];
+  const requestedModel = options.model || 'gemini-3.7-flash';
+  const candidateModels = [requestedModel];
   let lastError: any = null;
+
+  const parseRetryDelayMs = (err: any): number | null => {
+    try {
+      const raw = typeof err?.message === 'string' ? JSON.parse(err.message) : err;
+      const details = raw?.error?.details || err?.error?.details || [];
+      const retryInfo = details.find((d: any) => d?.['@type']?.includes('RetryInfo'));
+      const delay = retryInfo?.retryDelay;
+      if (typeof delay === 'string') {
+        const m = delay.match(/([0-9.]+)s/);
+        if (m) return Math.ceil(Number(m[1]) * 1000);
+      }
+    } catch {}
+    const msg = String(err?.message || '');
+    const m = msg.match(/retry in\s+([0-9.]+)s/i);
+    return m ? Math.ceil(Number(m[1]) * 1000) : null;
+  };
+
+  const isDailyQuota = (err: any): boolean => {
+    const msg = String(err?.message || '');
+    return (
+      msg.includes('GenerateRequestsPerDayPerProjectPerModel') ||
+      msg.toLowerCase().includes('per day')
+    );
+  };
 
   for (const model of candidateModels) {
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {
-        const response = await ai.models.generateContent({
+        return await ai.models.generateContent({
           ...options,
           model,
         });
-        return response;
       } catch (err: any) {
         lastError = err;
-        const msg = err?.message || '';
-        const status = err?.status || err?.code || (err?.error && err.error.code);
-        const isTransient =
-          status === 503 ||
+        const msg = String(err?.message || '');
+        const status = err?.status || err?.code || err?.error?.code;
+
+        const rateLimited =
           status === 429 ||
-          msg.includes('503') ||
           msg.includes('429') ||
-          msg.includes('high demand') ||
-          msg.includes('UNAVAILABLE') ||
           msg.includes('RESOURCE_EXHAUSTED');
 
-        if (isTransient && attempt < maxRetries) {
-          const delay = (attempt + 1) * 700 + Math.floor(Math.random() * 300);
-          console.warn(
-            `[Gemini Retry] Model ${model} attempt ${attempt + 1} transient error: ${msg}. Retrying in ${delay}ms...`
-          );
-          await new Promise((resolve) => setTimeout(resolve, delay));
-        } else {
-          // Break to next candidate model if available
+        const unavailable =
+          status === 503 ||
+          msg.includes('503') ||
+          msg.includes('UNAVAILABLE') ||
+          msg.toLowerCase().includes('high demand');
+
+        if (rateLimited && isDailyQuota(err)) {
+          console.warn(`[Gemini Retry] Daily quota exhausted for ${model}; failing fast.`);
+          throw err;
+        }
+
+        if (attempt >= maxRetries || (!rateLimited && !unavailable)) {
           break;
         }
+
+        let delayMs: number;
+        if (rateLimited) {
+          delayMs = (parseRetryDelayMs(err) ?? 15000) + 750;
+        } else {
+          delayMs = Math.min(
+            8000,
+            1200 * Math.pow(2, attempt) + Math.floor(Math.random() * 500)
+          );
+        }
+
+        console.warn(
+          `[Gemini Retry] ${model} attempt ${attempt + 1} failed (${status || 'unknown'}). Retrying in ${delayMs}ms.`
+        );
+        await new Promise((resolve) => setTimeout(resolve, delayMs));
       }
     }
   }
