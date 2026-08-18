@@ -478,23 +478,10 @@ Generate your response in structured JSON.`;
       const parsed = JSON.parse(response.text?.trim() || '{}');
       res.json(parsed);
     } catch (err: any) {
-      console.warn('Chat API Falling back gracefully due to:', err?.message);
-      // Graceful fallback response
-      res.json({
-        replyText: `¡Muy bien! Sigamos con nuestra conversación. ¿Puedes decirme más sobre eso?`,
-        replyTranslation: 'ممتاز! دعنا نكمل محادثتنا. هل يمكنك إخباري بالمزيد؟',
-        replyRomanization: 'Moo-ee byehn! See-gah-mos...',
-        correction: {
-          hasMistake: false,
-          correctedText: userMessage,
-          explanation: 'استخدام جيد ومفهوم للكلمات.',
-          grammarTip: 'حافظ على تدفق الحديث وتواصل بشكل طبيعي.',
-        },
-        suggestedReplies: [
-          { text: 'Sí, por supuesto.', translation: 'نعم، بكل تأكيد.' },
-          { text: 'Me gustaría explicar más detalles.', translation: 'أود توضيح المزيد من التفاصيل.' },
-          { text: '¿Qué opinas tú de esto?', translation: 'ما رأيك أنت في هذا؟' },
-        ],
+      console.warn('Chat API unavailable:', err?.message);
+      res.status(503).json({
+        error: 'CHAT_UNAVAILABLE',
+        message: 'The AI conversation service is temporarily unavailable. Please retry this turn.',
       });
     }
   });
@@ -932,14 +919,10 @@ ${JSON.stringify(answers || [], null, 2)}`;
       const parsed = JSON.parse(response.text?.trim() || '{}');
       res.json(parsed);
     } catch (err: any) {
-      console.warn('Placement evaluation falling back gracefully:', err?.message);
-      res.json({
-        recommendedLevel: 'A2',
-        levelTitle: 'Elementary Conversational (A2)',
-        confidence: 82,
-        summary: `You demonstrated a practical working foundation in ${language}, with good comprehension of basic conversational prompts.`,
-        strengths: ['Clear sentence formulation', 'Basic vocabulary retrieval'],
-        growthAreas: ['Expanding past tense verb forms', 'Connecting complex clauses'],
+      console.warn('Placement evaluation unavailable:', err?.message);
+      res.status(503).json({
+        error: 'PLACEMENT_UNAVAILABLE',
+        message: 'Placement evaluation is temporarily unavailable. Your current level has not been changed.',
       });
     }
   });
@@ -994,25 +977,10 @@ Include roles, setting, 3 learning objectives, initial in-character message with
       const parsed = JSON.parse(response.text?.trim() || '{}');
       res.json(parsed);
     } catch (err: any) {
-      console.warn('Scenario generation falling back gracefully:', err?.message);
-      res.json({
-        id: 'scenario-gen-' + Date.now(),
-        title: userPrompt || 'Conversational Practice',
-        category: 'Daily Life',
-        role: 'Learner',
-        partnerRole: 'Local Friend',
-        setting: 'Everyday dialogue',
-        difficultyLevel: level,
-        objectives: ['Introduce yourself', 'Ask a question', 'Practice natural conversation'],
-        initialMessage: `¡Hola! Qué gusto saludarte. ¿Cómo estás hoy?`,
-        initialMessageTranslation: 'مرحباً! سررت بلقائك، كيف حالك اليوم؟',
-        initialMessageRomanization: 'Ola! Keh goos-toh sah-loo-dahr-teh.',
-        icon: 'Compass',
-        suggestedReplies: [
-          { text: '¡Hola! Estoy muy bien, gracias.', translation: 'أهلاً! أنا بخير جداً، شكراً لك.' },
-          { text: 'Todo va bien. ¿Y tú cómo estás?', translation: 'كل شيء على ما يرام، وأنت كيف حالك؟' },
-          { text: 'Mucho gusto en conocerte.', translation: 'تشرفت بلقائك كثيراً.' },
-        ],
+      console.warn('Scenario generation unavailable:', err?.message);
+      res.status(503).json({
+        error: 'SCENARIO_GENERATION_UNAVAILABLE',
+        message: 'Custom scenario generation is temporarily unavailable. Please retry.',
       });
     }
   });
@@ -1072,7 +1040,7 @@ Provide translation, part of speech, romanization, definition, gender/class, roo
         definition: `A core conversational vocabulary item in ${language}.`,
         genderOrClass: 'standard',
         examples: [
-          { target: `${word} es importante.`, english: `This word is useful in daily conversations.` },
+          { target: word, english: `This word is useful in daily conversations.` },
         ],
         synonyms: [],
         culturalNotes: 'Used frequently in authentic spoken conversation.',
@@ -1146,7 +1114,7 @@ Student: "${userMessage}"`;
       console.warn('Tutor chat falling back gracefully:', err?.message);
       res.json({
         replyText: `أنا معك خطوة بخطوة لمساعدتك في إتقان ${language}. استمر في ممارسة التحدث اليومي لتحسين ثقتك وسرعة استجابتك!`,
-        targetLanguageExample: 'La práctica hace al maestro.',
+        targetLanguageExample: '',
         suggestedActions: [
           { title: 'ابدأ محادثة لعب أدوار قصيرة', actionType: 'roleplay' },
           { title: 'تدرب على أسئلة القواعد السريعة', actionType: 'drill' },
