@@ -3,6 +3,7 @@
   "fluid": true,
   "buildCommand": "npm run vercel-build",
   "rewrites": [
-    { "source": "/live", "destination": "/api/live" }
+    { "source": "/live", "destination": "/api/live" },
+    { "source": "/api/:path*", "destination": "/api/index?path=:path*" }
   ]
 }

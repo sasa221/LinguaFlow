@@ -259,7 +259,7 @@ function getFallbackSessionAnalysis(language = 'Spanish', level = 'A2', scenario
 }
 
 
-export async function createApp() {
+async function createApp() {
 
   const app = express();
   const PORT = 3000;
@@ -1011,5 +1011,23 @@ Student: "${userMessage}"`;
 
 }
 
+
 const app = await createApp();
-export default app;
+
+export default function handler(req: any, res: any) {
+  const rawPath = typeof req.query?.path === 'string' ? req.query.path : '';
+  const query = { ...(req.query || {}) };
+  delete query.path;
+
+  const search = new URLSearchParams();
+  for (const [key, value] of Object.entries(query)) {
+    if (Array.isArray(value)) {
+      for (const item of value) search.append(key, String(item));
+    } else if (value !== undefined) {
+      search.set(key, String(value));
+    }
+  }
+
+  req.url = '/' + rawPath + (search.toString() ? `?${search.toString()}` : '');
+  return app(req, res);
+}
