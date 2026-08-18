@@ -108,56 +108,56 @@ async function generateGeminiWithRetry(
 
 // Fallback Generators for High-Demand API spikes
 function getFallbackDrills(language = 'Spanish', level = 'A2', topic = 'Conversational Grammar') {
-  const isSpanish = language.toLowerCase().includes('span') || language.toLowerCase().includes('espaÃ±ol');
-  const isFrench = language.toLowerCase().includes('fren') || language.toLowerCase().includes('franÃ§ais');
+  const isSpanish = language.toLowerCase().includes('span') || language.toLowerCase().includes('español');
+  const isFrench = language.toLowerCase().includes('fren') || language.toLowerCase().includes('français');
   const isGerman = language.toLowerCase().includes('germ') || language.toLowerCase().includes('deutsch');
-  const isArabic = language.toLowerCase().includes('arab') || language.toLowerCase().includes('Ø¹Ø±Ø¨');
+  const isArabic = language.toLowerCase().includes('arab') || language.toLowerCase().includes('عرب');
 
   if (isSpanish) {
     return [
       {
         id: 'drill-es-1',
         type: 'multiple_choice',
-        question: 'Â¿CuÃ¡l es la forma correcta para pedir cortÃ©smente un cafÃ©?',
-        prompt: 'Â¿CuÃ¡l es la forma correcta para pedir cortÃ©smente un cafÃ©?',
-        context: 'En una cafeterÃ­a en Madrid',
-        options: ['Quisiera un cafÃ© solo, por favor.', 'Yo quiero cafÃ©.', 'Dame cafÃ© ahora.', 'Tengo cafÃ©.'],
+        question: '¿Cuál es la forma correcta para pedir cortésmente un café?',
+        prompt: '¿Cuál es la forma correcta para pedir cortésmente un café?',
+        context: 'En una cafetería en Madrid',
+        options: ['Quisiera un café solo, por favor.', 'Yo quiero café.', 'Dame café ahora.', 'Tengo café.'],
         correctIndex: 0,
-        correctAnswer: 'Quisiera un cafÃ© solo, por favor.',
-        explanation: 'Usar "Quisiera" expresa cortesÃ­a y naturalidad al ordenar en espaÃ±ol.',
+        correctAnswer: 'Quisiera un café solo, por favor.',
+        explanation: 'Usar "Quisiera" expresa cortesía y naturalidad al ordenar en español.',
       },
       {
         id: 'drill-es-2',
         type: 'fill_blank',
         question: 'Completa con el verbo adecuado: "Ayer yo _____ al centro de la ciudad."',
         prompt: 'Completa con el verbo adecuado: "Ayer yo _____ al centro de la ciudad."',
-        context: 'AcciÃ³n completada en el pasado',
+        context: 'Acción completada en el pasado',
         options: ['fui', 'iba', 'voy', 'he ido'],
         correctIndex: 0,
         correctAnswer: 'fui',
-        explanation: '"Fui" es la primera persona del pretÃ©rito indefinido de ir.',
+        explanation: '"Fui" es la primera persona del pretérito indefinido de ir.',
       },
       {
         id: 'drill-es-3',
         type: 'multiple_choice',
-        question: 'Â¿CÃ³mo preguntas la hora de manera natural?',
-        prompt: 'Â¿CÃ³mo preguntas la hora de manera natural?',
-        context: 'Hablando con un transeÃºnte',
-        options: ['Â¿QuÃ© hora es, por favor?', 'Â¿CuÃ¡nto tiempo?', 'Â¿QuÃ© reloj tienes?', 'Â¿DÃ³nde estÃ¡ la hora?'],
+        question: '¿Cómo preguntas la hora de manera natural?',
+        prompt: '¿Cómo preguntas la hora de manera natural?',
+        context: 'Hablando con un transeúnte',
+        options: ['¿Qué hora es, por favor?', '¿Cuánto tiempo?', '¿Qué reloj tienes?', '¿Dónde está la hora?'],
         correctIndex: 0,
-        correctAnswer: 'Â¿QuÃ© hora es, por favor?',
-        explanation: '"Â¿QuÃ© hora es?" es la fÃ³rmula universal y estÃ¡ndar en espaÃ±ol.',
+        correctAnswer: '¿Qué hora es, por favor?',
+        explanation: '"¿Qué hora es?" es la fórmula universal y estándar en español.',
       },
       {
         id: 'drill-es-4',
         type: 'translate',
-        question: 'Â¿CuÃ¡l es el significado de: "Mucho gusto en conocerte"?',
-        prompt: 'Â¿CuÃ¡l es el significado de: "Mucho gusto en conocerte"?',
+        question: '¿Cuál es el significado de: "Mucho gusto en conocerte"?',
+        prompt: '¿Cuál es el significado de: "Mucho gusto en conocerte"?',
         context: 'Presentaciones iniciales',
-        options: ['Nice to meet you / ÙØ±ØµØ© Ø³Ø¹ÙŠØ¯Ø© Ù„Ù„Ù‚Ø§Ø¦Ùƒ', 'Where are you from?', 'See you tomorrow', 'How much does it cost?'],
+        options: ['Nice to meet you / فرصة سعيدة للقائك', 'Where are you from?', 'See you tomorrow', 'How much does it cost?'],
         correctIndex: 0,
-        correctAnswer: 'Nice to meet you / ÙØ±ØµØ© Ø³Ø¹ÙŠØ¯Ø© Ù„Ù„Ù‚Ø§Ø¦Ùƒ',
-        explanation: 'Es la expresiÃ³n estÃ¡ndar de saludo y cortesÃ­a al ser presentado.',
+        correctAnswer: 'Nice to meet you / فرصة سعيدة للقائك',
+        explanation: 'Es la expresión estándar de saludo y cortesía al ser presentado.',
       },
     ];
   }
@@ -167,35 +167,35 @@ function getFallbackDrills(language = 'Spanish', level = 'A2', topic = 'Conversa
       {
         id: 'drill-fr-1',
         type: 'multiple_choice',
-        question: 'Comment demander lâ€™addition poliment au restaurant ?',
-        prompt: 'Comment demander lâ€™addition poliment au restaurant ?',
-        context: 'Au restaurant Ã  Paris',
-        options: ["L'addition, s'il vous plaÃ®t.", 'Donne la facture.', 'Je veux payer maintenant.', 'Combien coÃ»te tout?'],
+        question: 'Comment demander l’addition poliment au restaurant ?',
+        prompt: 'Comment demander l’addition poliment au restaurant ?',
+        context: 'Au restaurant à Paris',
+        options: ["L'addition, s'il vous plaît.", 'Donne la facture.', 'Je veux payer maintenant.', 'Combien coûte tout?'],
         correctIndex: 0,
-        correctAnswer: "L'addition, s'il vous plaÃ®t.",
-        explanation: '"L\'addition, s\'il vous plaÃ®t" est la formule standard et polie.',
+        correctAnswer: "L'addition, s'il vous plaît.",
+        explanation: '"L\'addition, s\'il vous plaît" est la formule standard et polie.',
       },
       {
         id: 'drill-fr-2',
         type: 'fill_blank',
-        question: 'ComplÃ©tez : "Je _____ apprendre le franÃ§ais tous les jours."',
-        prompt: 'ComplÃ©tez : "Je _____ apprendre le franÃ§ais tous les jours."',
+        question: 'Complétez : "Je _____ apprendre le français tous les jours."',
+        prompt: 'Complétez : "Je _____ apprendre le français tous les jours."',
         context: 'Habitude quotidienne',
         options: ['veux', 'vouloir', 'veut', 'voulons'],
         correctIndex: 0,
         correctAnswer: 'veux',
-        explanation: '"Je veux" est la conjugaison correcte Ã  la premiÃ¨re personne du singulier.',
+        explanation: '"Je veux" est la conjugaison correcte à la première personne du singulier.',
       },
       {
         id: 'drill-fr-3',
         type: 'multiple_choice',
-        question: 'Que signifie "EnchantÃ© de faire votre connaissance" ?',
-        prompt: 'Que signifie "EnchantÃ© de faire votre connaissance" ?',
+        question: 'Que signifie "Enchanté de faire votre connaissance" ?',
+        prompt: 'Que signifie "Enchanté de faire votre connaissance" ?',
         context: 'Salutations',
-        options: ['Delighted to meet you / ØªØ´Ø±ÙØª Ø¨Ù…Ø¹Ø±ÙØªÙƒ', 'Goodbye', 'Where is the station?', 'Thank you very much'],
+        options: ['Delighted to meet you / تشرفت بمعرفتك', 'Goodbye', 'Where is the station?', 'Thank you very much'],
         correctIndex: 0,
-        correctAnswer: 'Delighted to meet you / ØªØ´Ø±ÙØª Ø¨Ù…Ø¹Ø±ÙØªÙƒ',
-        explanation: 'Formule courtoise employÃ©e lors d\'une premiÃ¨re rencontre.',
+        correctAnswer: 'Delighted to meet you / تشرفت بمعرفتك',
+        explanation: 'Formule courtoise employée lors d\'une première rencontre.',
       },
     ];
   }
@@ -283,8 +283,8 @@ function getFallbackSessionAnalysis(language = 'Spanish', level = 'A2', scenario
     ],
     keyVocabularyLearned: [
       {
-        word: 'por favor / s\'il vous plaÃ®t / please',
-        translation: 'Ù…Ù† ÙØ¶Ù„Ùƒ / please',
+        word: 'por favor / s\'il vous plaît / please',
+        translation: 'من فضلك / please',
         contextSentence: `Useful everyday phrase in ${language}.`,
       },
     ],
@@ -460,7 +460,7 @@ Provide phonetic accuracy scores, word-level feedback, and actionable accent tip
 Output JSON matching the schema:
 - score: number (0-100 overall pronunciation & rhythm score)
 - overallScore: number (0-100)
-- accuracyCategory: string (e.g. "Ù†Ø·Ù‚ Ù…Ù…ØªØ§Ø²", "Ù†Ø·Ù‚ Ø¬ÙŠØ¯ Ø¬Ø¯Ø§Ù‹", "ÙŠØ­ØªØ§Ø¬ ØªØ­Ø³ÙŠÙ† ÙÙŠ Ù…Ø®Ø§Ø±Ø¬ Ø§Ù„Ø­Ø±ÙˆÙ")
+- accuracyCategory: string (e.g. "نطق ممتاز", "نطق جيد جداً", "يحتاج تحسين في مخارج الحروف")
 - feedback: string (warm, encouraging coaching message)
 - feedbackMessage: string (same coaching message)
 - fluencyTip: string (short tip on rhythm or intonation)
@@ -522,18 +522,18 @@ Output JSON matching the schema:
       res.json({
         overallScore: 88,
         score: 88,
-        accuracyCategory: 'Ù†Ø·Ù‚ ÙˆØ§Ø¶Ø­ ÙˆØ¬ÙŠØ¯ Ø¬Ø¯Ø§Ù‹',
-        feedback: 'Ù†Ø·Ù‚Ùƒ ÙˆØ§Ø¶Ø­ ÙˆÙ…Ø®Ø§Ø±Ø¬ Ø§Ù„Ø­Ø±ÙˆÙ Ù…ÙÙ‡ÙˆÙ…Ø© ÙˆØ³Ù„ÙŠÙ…Ø© Ø¨Ø´ÙƒÙ„ Ø¹Ø§Ù….',
-        feedbackMessage: 'Ù†Ø·Ù‚Ùƒ ÙˆØ§Ø¶Ø­ ÙˆÙ…Ø®Ø§Ø±Ø¬ Ø§Ù„Ø­Ø±ÙˆÙ Ù…ÙÙ‡ÙˆÙ…Ø© ÙˆØ³Ù„ÙŠÙ…Ø© Ø¨Ø´ÙƒÙ„ Ø¹Ø§Ù….',
-        fluencyTip: 'Ø­Ø§ÙˆÙ„ Ø§Ù„Ø±Ø¨Ø· Ø¨ÙŠÙ† Ø§Ù„ÙƒÙ„Ù…Ø§Øª Ø¨Ø³Ù„Ø§Ø³Ø© Ø¯ÙˆÙ† Ø§Ù„ØªÙˆÙ‚Ù Ø§Ù„Ù…ÙØ§Ø¬Ø¦.',
+        accuracyCategory: 'نطق واضح وجيد جداً',
+        feedback: 'نطقك واضح ومخارج الحروف مفهومة وسليمة بشكل عام.',
+        feedbackMessage: 'نطقك واضح ومخارج الحروف مفهومة وسليمة بشكل عام.',
+        fluencyTip: 'حاول الربط بين الكلمات بسلاسة دون التوقف المفاجئ.',
         wordBreakdown: words.map((w: string) => ({
           word: w,
           accuracyScore: 88,
           score: 88,
           phonetic: w,
-          tip: 'Ù†Ø·Ù‚ Ø³Ù„ÙŠÙ…',
+          tip: 'نطق سليم',
         })),
-        keyAccentTips: ['Ø±ÙƒØ² Ø¹Ù„Ù‰ Ù†Ø¨Ø±Ø© Ø§Ù„ØµÙˆØª ÙÙŠ Ù†Ù‡Ø§ÙŠØ© Ø§Ù„Ø¬Ù…Ù„Ø©', 'ØªÙ†ÙØ³ Ø¨Ø§Ù†ØªØ¸Ø§Ù… Ø£Ø«Ù†Ø§Ø¡ Ù†Ø·Ù‚ Ø§Ù„Ø¹Ø¨Ø§Ø±Ø§Øª Ø§Ù„Ø·ÙˆÙŠÙ„Ø©'],
+        keyAccentTips: ['ركز على نبرة الصوت في نهاية الجملة', 'تنفس بانتظام أثناء نطق العبارات الطويلة'],
       });
     }
   };
@@ -1027,11 +1027,11 @@ Student: "${userMessage}"`;
     } catch (err: any) {
       console.warn('Tutor chat falling back gracefully:', err?.message);
       res.json({
-        replyText: `Ø£Ù†Ø§ Ù…Ø¹Ùƒ Ø®Ø·ÙˆØ© Ø¨Ø®Ø·ÙˆØ© Ù„Ù…Ø³Ø§Ø¹Ø¯ØªÙƒ ÙÙŠ Ø¥ØªÙ‚Ø§Ù† ${language}. Ø§Ø³ØªÙ…Ø± ÙÙŠ Ù…Ù…Ø§Ø±Ø³Ø© Ø§Ù„ØªØ­Ø¯Ø« Ø§Ù„ÙŠÙˆÙ…ÙŠ Ù„ØªØ­Ø³ÙŠÙ† Ø«Ù‚ØªÙƒ ÙˆØ³Ø±Ø¹Ø© Ø§Ø³ØªØ¬Ø§Ø¨ØªÙƒ!`,
+        replyText: `أنا معك خطوة بخطوة لمساعدتك في إتقان ${language}. استمر في ممارسة التحدث اليومي لتحسين ثقتك وسرعة استجابتك!`,
         targetLanguageExample: '',
         suggestedActions: [
-          { title: 'Ø§Ø¨Ø¯Ø£ Ù…Ø­Ø§Ø¯Ø«Ø© Ù„Ø¹Ø¨ Ø£Ø¯ÙˆØ§Ø± Ù‚ØµÙŠØ±Ø©', actionType: 'roleplay' },
-          { title: 'ØªØ¯Ø±Ø¨ Ø¹Ù„Ù‰ Ø£Ø³Ø¦Ù„Ø© Ø§Ù„Ù‚ÙˆØ§Ø¹Ø¯ Ø§Ù„Ø³Ø±ÙŠØ¹Ø©', actionType: 'drill' },
+          { title: 'ابدأ محادثة لعب أدوار قصيرة', actionType: 'roleplay' },
+          { title: 'تدرب على أسئلة القواعد السريعة', actionType: 'drill' },
         ],
       });
     }
