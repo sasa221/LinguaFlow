@@ -217,13 +217,153 @@ export const SCENARIOS: Record<string, Scenario[]> = {
   ],
 };
 
+
+type PracticeCategory = 'Daily Life' | 'Dining' | 'Travel' | 'Career' | 'Shopping';
+
+const PRACTICE_META: Record<PracticeCategory, {
+  title: string;
+  role: string;
+  partnerRole: string;
+  setting: string;
+  objectives: string[];
+  icon: string;
+}> = {
+  'Daily Life': {
+    title: 'Introduce Yourself & First Conversation',
+    role: 'Learner meeting someone for the first time',
+    partnerRole: 'Friendly Local',
+    setting: 'A relaxed first meeting in an everyday social setting',
+    objectives: ['Greet naturally', 'Say your name and where you are from', 'Ask one simple question'],
+    icon: 'Sparkles',
+  },
+  Dining: {
+    title: 'Order Food & Drink',
+    role: 'Customer ordering a simple meal or drink',
+    partnerRole: 'Restaurant Server',
+    setting: 'A casual local restaurant or cafÃ©',
+    objectives: ['Greet the server', 'Order food or a drink politely', 'Ask the price and say thank you'],
+    icon: 'Utensils',
+  },
+  Travel: {
+    title: 'Hotel Check-in & Directions',
+    role: 'Traveler needing practical help',
+    partnerRole: 'Hotel Receptionist',
+    setting: 'A hotel reception desk near the city center',
+    objectives: ['Check in', 'Ask about a hotel service', 'Ask for simple directions'],
+    icon: 'Compass',
+  },
+  Career: {
+    title: 'Career & Job Interview',
+    role: 'Candidate in a beginner-friendly interview',
+    partnerRole: 'Hiring Manager',
+    setting: 'A friendly professional interview',
+    objectives: ['Introduce yourself', 'Describe one skill or experience', 'Ask one question about the job'],
+    icon: 'Briefcase',
+  },
+  Shopping: {
+    title: 'Shopping & Market',
+    role: 'Customer shopping for an everyday item',
+    partnerRole: 'Shop Assistant',
+    setting: 'A local shop or market',
+    objectives: ['Ask for an item', 'Ask the price or size', 'Pay and close the interaction politely'],
+    icon: 'ShoppingBag',
+  },
+};
+
+const LANGUAGE_STARTERS: Record<string, { greeting: string; replies: Array<{ text: string; translation: string }> }> = {
+  english: { greeting: 'Hello! Welcome. How can I help you today?', replies: [
+    { text: 'Hello! I would like some help, please.', translation: 'Ù…Ø±Ø­Ø¨Ø§Ù‹ØŒ Ø£ÙˆØ¯ Ø¨Ø¹Ø¶ Ø§Ù„Ù…Ø³Ø§Ø¹Ø¯Ø© Ù…Ù† ÙØ¶Ù„Ùƒ.' },
+    { text: 'Could you tell me more?', translation: 'Ù‡Ù„ ÙŠÙ…ÙƒÙ†Ùƒ Ø£Ù† ØªØ®Ø¨Ø±Ù†ÙŠ Ø¨Ø§Ù„Ù…Ø²ÙŠØ¯ØŸ' },
+    { text: 'Thank you. I am ready.', translation: 'Ø´ÙƒØ±Ø§Ù‹ØŒ Ø£Ù†Ø§ Ù…Ø³ØªØ¹Ø¯.' },
+  ]},
+  spanish: { greeting: 'Â¡Hola! Bienvenido. Â¿En quÃ© puedo ayudarte hoy?', replies: [
+    { text: 'Hola, necesito un poco de ayuda, por favor.', translation: 'Ù…Ø±Ø­Ø¨Ø§Ù‹ØŒ Ø£Ø­ØªØ§Ø¬ Ø¨Ø¹Ø¶ Ø§Ù„Ù…Ø³Ø§Ø¹Ø¯Ø© Ù…Ù† ÙØ¶Ù„Ùƒ.' },
+    { text: 'Â¿Puede explicÃ¡rmelo, por favor?', translation: 'Ù‡Ù„ ÙŠÙ…ÙƒÙ†Ùƒ Ø´Ø±Ø­ Ø°Ù„Ùƒ Ù…Ù† ÙØ¶Ù„ÙƒØŸ' },
+    { text: 'Gracias. Estoy listo.', translation: 'Ø´ÙƒØ±Ø§Ù‹ØŒ Ø£Ù†Ø§ Ù…Ø³ØªØ¹Ø¯.' },
+  ]},
+  french: { greeting: 'Bonjour ! Bienvenue. Comment puis-je vous aider aujourdâ€™hui ?', replies: [
+    { text: 'Bonjour, jâ€™aimerais un peu dâ€™aide, sâ€™il vous plaÃ®t.', translation: 'Ù…Ø±Ø­Ø¨Ø§Ù‹ØŒ Ø£ÙˆØ¯ Ø¨Ø¹Ø¶ Ø§Ù„Ù…Ø³Ø§Ø¹Ø¯Ø© Ù…Ù† ÙØ¶Ù„Ùƒ.' },
+    { text: 'Pouvez-vous mâ€™expliquer, sâ€™il vous plaÃ®t ?', translation: 'Ù‡Ù„ ÙŠÙ…ÙƒÙ†Ùƒ Ø´Ø±Ø­ Ø°Ù„Ùƒ Ù…Ù† ÙØ¶Ù„ÙƒØŸ' },
+    { text: 'Merci. Je suis prÃªt.', translation: 'Ø´ÙƒØ±Ø§Ù‹ØŒ Ø£Ù†Ø§ Ù…Ø³ØªØ¹Ø¯.' },
+  ]},
+  german: { greeting: 'Hallo! Willkommen. Wie kann ich dir heute helfen?', replies: [
+    { text: 'Hallo, ich brauche bitte etwas Hilfe.', translation: 'Ù…Ø±Ø­Ø¨Ø§Ù‹ØŒ Ø£Ø­ØªØ§Ø¬ Ø¨Ø¹Ø¶ Ø§Ù„Ù…Ø³Ø§Ø¹Ø¯Ø© Ù…Ù† ÙØ¶Ù„Ùƒ.' },
+    { text: 'KÃ¶nnen Sie das bitte erklÃ¤ren?', translation: 'Ù‡Ù„ ÙŠÙ…ÙƒÙ†Ùƒ Ø´Ø±Ø­ Ø°Ù„Ùƒ Ù…Ù† ÙØ¶Ù„ÙƒØŸ' },
+    { text: 'Danke. Ich bin bereit.', translation: 'Ø´ÙƒØ±Ø§Ù‹ØŒ Ø£Ù†Ø§ Ù…Ø³ØªØ¹Ø¯.' },
+  ]},
+  italian: { greeting: 'Ciao! Benvenuto. Come posso aiutarti oggi?', replies: [
+    { text: 'Ciao, avrei bisogno di un poâ€™ di aiuto, per favore.', translation: 'Ù…Ø±Ø­Ø¨Ø§Ù‹ØŒ Ø£Ø­ØªØ§Ø¬ Ø¨Ø¹Ø¶ Ø§Ù„Ù…Ø³Ø§Ø¹Ø¯Ø© Ù…Ù† ÙØ¶Ù„Ùƒ.' },
+    { text: 'PuÃ² spiegarmelo, per favore?', translation: 'Ù‡Ù„ ÙŠÙ…ÙƒÙ†Ùƒ Ø´Ø±Ø­ Ø°Ù„Ùƒ Ù…Ù† ÙØ¶Ù„ÙƒØŸ' },
+    { text: 'Grazie. Sono pronto.', translation: 'Ø´ÙƒØ±Ø§Ù‹ØŒ Ø£Ù†Ø§ Ù…Ø³ØªØ¹Ø¯.' },
+  ]},
+  portuguese: { greeting: 'OlÃ¡! Bem-vindo. Como posso ajudar vocÃª hoje?', replies: [
+    { text: 'OlÃ¡, preciso de uma ajuda, por favor.', translation: 'Ù…Ø±Ø­Ø¨Ø§Ù‹ØŒ Ø£Ø­ØªØ§Ø¬ Ø¨Ø¹Ø¶ Ø§Ù„Ù…Ø³Ø§Ø¹Ø¯Ø© Ù…Ù† ÙØ¶Ù„Ùƒ.' },
+    { text: 'Pode explicar, por favor?', translation: 'Ù‡Ù„ ÙŠÙ…ÙƒÙ†Ùƒ Ø´Ø±Ø­ Ø°Ù„Ùƒ Ù…Ù† ÙØ¶Ù„ÙƒØŸ' },
+    { text: 'Obrigado. Estou pronto.', translation: 'Ø´ÙƒØ±Ø§Ù‹ØŒ Ø£Ù†Ø§ Ù…Ø³ØªØ¹Ø¯.' },
+  ]},
+  russian: { greeting: 'Ð—Ð´Ñ€Ð°Ð²ÑÑ‚Ð²ÑƒÐ¹Ñ‚Ðµ! Ð”Ð¾Ð±Ñ€Ð¾ Ð¿Ð¾Ð¶Ð°Ð»Ð¾Ð²Ð°Ñ‚ÑŒ. Ð§ÐµÐ¼ Ñ Ð¼Ð¾Ð³Ñƒ Ð²Ð°Ð¼ Ð¿Ð¾Ð¼Ð¾Ñ‡ÑŒ?', replies: [
+    { text: 'Ð—Ð´Ñ€Ð°Ð²ÑÑ‚Ð²ÑƒÐ¹Ñ‚Ðµ, Ð¼Ð½Ðµ Ð½ÑƒÐ¶Ð½Ð° Ð¿Ð¾Ð¼Ð¾Ñ‰ÑŒ, Ð¿Ð¾Ð¶Ð°Ð»ÑƒÐ¹ÑÑ‚Ð°.', translation: 'Ù…Ø±Ø­Ø¨Ø§Ù‹ØŒ Ø£Ø­ØªØ§Ø¬ Ø¨Ø¹Ø¶ Ø§Ù„Ù…Ø³Ø§Ø¹Ø¯Ø© Ù…Ù† ÙØ¶Ù„Ùƒ.' },
+    { text: 'ÐœÐ¾Ð¶ÐµÑ‚Ðµ Ð¾Ð±ÑŠÑÑÐ½Ð¸Ñ‚ÑŒ, Ð¿Ð¾Ð¶Ð°Ð»ÑƒÐ¹ÑÑ‚Ð°?', translation: 'Ù‡Ù„ ÙŠÙ…ÙƒÙ†Ùƒ Ø´Ø±Ø­ Ø°Ù„Ùƒ Ù…Ù† ÙØ¶Ù„ÙƒØŸ' },
+    { text: 'Ð¡Ð¿Ð°ÑÐ¸Ð±Ð¾. Ð¯ Ð³Ð¾Ñ‚Ð¾Ð².', translation: 'Ø´ÙƒØ±Ø§Ù‹ØŒ Ø£Ù†Ø§ Ù…Ø³ØªØ¹Ø¯.' },
+  ]},
+  japanese: { greeting: 'ã“ã‚“ã«ã¡ã¯ï¼ã„ã‚‰ã£ã—ã‚ƒã„ã¾ã›ã€‚ä»Šæ—¥ã¯ã©ã†ã•ã‚Œã¾ã—ãŸã‹ï¼Ÿ', replies: [
+    { text: 'ã“ã‚“ã«ã¡ã¯ã€‚ã¡ã‚‡ã£ã¨åŠ©ã‘ã¦ãã ã•ã„ã€‚', translation: 'Ù…Ø±Ø­Ø¨Ø§Ù‹ØŒ Ø£Ø­ØªØ§Ø¬ Ø¨Ø¹Ø¶ Ø§Ù„Ù…Ø³Ø§Ø¹Ø¯Ø© Ù…Ù† ÙØ¶Ù„Ùƒ.' },
+    { text: 'ã‚‚ã†ä¸€åº¦èª¬æ˜Žã—ã¦ãã ã•ã„ã€‚', translation: 'Ù…Ù† ÙØ¶Ù„Ùƒ Ø§Ø´Ø±Ø­ Ù…Ø±Ø© Ø£Ø®Ø±Ù‰.' },
+    { text: 'ã‚ã‚ŠãŒã¨ã†ã”ã–ã„ã¾ã™ã€‚æº–å‚™ã§ãã¾ã—ãŸã€‚', translation: 'Ø´ÙƒØ±Ø§Ù‹ØŒ Ø£Ù†Ø§ Ù…Ø³ØªØ¹Ø¯.' },
+  ]},
+  korean: { greeting: 'ì•ˆë…•í•˜ì„¸ìš”! ì–´ì„œ ì˜¤ì„¸ìš”. ì˜¤ëŠ˜ ë¬´ì—‡ì„ ë„ì™€ë“œë¦´ê¹Œìš”?', replies: [
+    { text: 'ì•ˆë…•í•˜ì„¸ìš”. ì¢€ ë„ì™€ì£¼ì„¸ìš”.', translation: 'Ù…Ø±Ø­Ø¨Ø§Ù‹ØŒ Ø£Ø­ØªØ§Ø¬ Ø¨Ø¹Ø¶ Ø§Ù„Ù…Ø³Ø§Ø¹Ø¯Ø© Ù…Ù† ÙØ¶Ù„Ùƒ.' },
+    { text: 'ë‹¤ì‹œ ì„¤ëª…í•´ ì£¼ì„¸ìš”.', translation: 'Ù…Ù† ÙØ¶Ù„Ùƒ Ø§Ø´Ø±Ø­ Ù…Ø±Ø© Ø£Ø®Ø±Ù‰.' },
+    { text: 'ê°ì‚¬í•©ë‹ˆë‹¤. ì¤€ë¹„ëì–´ìš”.', translation: 'Ø´ÙƒØ±Ø§Ù‹ØŒ Ø£Ù†Ø§ Ù…Ø³ØªØ¹Ø¯.' },
+  ]},
+  arabic: { greeting: 'Ù…Ø±Ø­Ø¨Ø§Ù‹! Ø£Ù‡Ù„Ø§Ù‹ Ø¨Ùƒ. ÙƒÙŠÙ ÙŠÙ…ÙƒÙ†Ù†ÙŠ Ù…Ø³Ø§Ø¹Ø¯ØªÙƒ Ø§Ù„ÙŠÙˆÙ…ØŸ', replies: [
+    { text: 'Ù…Ø±Ø­Ø¨Ø§Ù‹ØŒ Ø£Ø­ØªØ§Ø¬ Ø¥Ù„Ù‰ Ø¨Ø¹Ø¶ Ø§Ù„Ù…Ø³Ø§Ø¹Ø¯Ø© Ù…Ù† ÙØ¶Ù„Ùƒ.', translation: 'Hello, I need some help please.' },
+    { text: 'Ù‡Ù„ ÙŠÙ…ÙƒÙ†Ùƒ Ø£Ù† ØªØ´Ø±Ø­ Ø°Ù„Ùƒ Ù…Ù† ÙØ¶Ù„ÙƒØŸ', translation: 'Could you explain that, please?' },
+    { text: 'Ø´ÙƒØ±Ø§Ù‹ØŒ Ø£Ù†Ø§ Ù…Ø³ØªØ¹Ø¯.', translation: 'Thank you, I am ready.' },
+  ]},
+  chinese: { greeting: 'ä½ å¥½ï¼æ¬¢è¿Žã€‚ä»Šå¤©æˆ‘å¯ä»¥æ€Žä¹ˆå¸®ä½ ï¼Ÿ', replies: [
+    { text: 'ä½ å¥½ï¼Œè¯·å¸®å¸®æˆ‘ã€‚', translation: 'Ù…Ø±Ø­Ø¨Ø§Ù‹ØŒ Ø£Ø­ØªØ§Ø¬ Ø¨Ø¹Ø¶ Ø§Ù„Ù…Ø³Ø§Ø¹Ø¯Ø© Ù…Ù† ÙØ¶Ù„Ùƒ.' },
+    { text: 'è¯·å†è§£é‡Šä¸€ä¸‹ã€‚', translation: 'Ù…Ù† ÙØ¶Ù„Ùƒ Ø§Ø´Ø±Ø­ Ù…Ø±Ø© Ø£Ø®Ø±Ù‰.' },
+    { text: 'è°¢è°¢ï¼Œæˆ‘å‡†å¤‡å¥½äº†ã€‚', translation: 'Ø´ÙƒØ±Ø§Ù‹ØŒ Ø£Ù†Ø§ Ù…Ø³ØªØ¹Ø¯.' },
+  ]},
+};
+
+export function buildPracticeScenario(language: Language, level: ProficiencyLevel, category: string, templateId = 'practice'): Scenario {
+  const normalizedCategory = (Object.keys(PRACTICE_META) as PracticeCategory[])
+    .find((key) => key.toLowerCase() === category.toLowerCase()) || 'Daily Life';
+
+  const authored = (SCENARIOS[language.id] || []).find(
+    (s) => s.category.toLowerCase() === normalizedCategory.toLowerCase()
+  );
+  if (authored) return authored;
+
+  const meta = PRACTICE_META[normalizedCategory];
+  const starter = LANGUAGE_STARTERS[language.id] || LANGUAGE_STARTERS.english;
+
+  return {
+    id: `${language.id}-${templateId}-${normalizedCategory.toLowerCase().replace(/\s+/g, '-')}`,
+    title: meta.title,
+    category: normalizedCategory,
+    role: meta.role,
+    partnerRole: meta.partnerRole,
+    setting: `${meta.setting}. Conduct the interaction naturally in ${language.name}.`,
+    difficultyLevel: level,
+    objectives: meta.objectives,
+    initialMessage: starter.greeting,
+    initialMessageTranslation: starter.greeting,
+    initialMessageRomanization: '',
+    icon: meta.icon,
+    suggestedReplies: starter.replies,
+  };
+}
+
 export const DEFAULT_SCENARIO: Scenario = SCENARIOS.spanish[0];
 
 export function getDefaultScenarioForLanguageAndLevel(
   language: Language,
   level: ProficiencyLevel
 ): Scenario {
-  const list = SCENARIOS[language.id] || SCENARIOS.spanish;
+  const list = SCENARIOS[language.id] || [];
   const match = list.find((s) => s.difficultyLevel === level) || list[0];
-  return match || DEFAULT_SCENARIO;
+  return match || buildPracticeScenario(language, level, 'Daily Life', 'default');
 }

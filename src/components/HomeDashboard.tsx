@@ -32,7 +32,7 @@ import {
   CurriculumUnit,
   CurriculumLesson,
 } from '../types';
-import { SCENARIOS, getDefaultScenarioForLanguageAndLevel } from '../data/scenarios';
+import { SCENARIOS, getDefaultScenarioForLanguageAndLevel, buildPracticeScenario } from '../data/scenarios';
 import { getNextCurriculumStep, getCanDoMasteryReport } from '../data/curriculum/curriculumEngine';
 
 interface HomeDashboardProps {
@@ -184,7 +184,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
     const catMatch = list.find((s) => s.category.toLowerCase() === template.category.toLowerCase());
     if (catMatch) return catMatch;
 
-    return getDefaultScenarioForLanguageAndLevel(currentLanguage, currentLevel);
+    return buildPracticeScenario(currentLanguage, currentLevel, template.category, template.id);
   };
 
   const getSmartRecommendation = () => {
